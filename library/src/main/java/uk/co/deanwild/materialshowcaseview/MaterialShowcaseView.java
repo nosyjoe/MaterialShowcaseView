@@ -380,6 +380,12 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
         }
     }
 
+    private void setSkipText(CharSequence text) {
+        if (mSkipButton != null) {
+            mSkipButton.setText(text);
+        }
+    }
+
     private void setIsSequence(Boolean isSequenceB) {
         isSequence = isSequenceB;
     }
@@ -494,6 +500,7 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
         setShape(config.getShape());
         setShapePadding(config.getShapePadding());
         setRenderOverNavigationBar(config.getRenderOverNavigationBar());
+        setSkipText(config.getSkipText());
     }
 
     private void updateDismissButton() {
@@ -602,6 +609,21 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
          */
         public Builder setTitleText(CharSequence text) {
             showcaseView.setTitleText(text);
+            return this;
+        }
+
+        /**
+         * Set the title text shown on the ShowcaseView.
+         */
+        public Builder setSkipText(int resId) {
+            return setSkipText(activity.getString(resId));
+        }
+
+        /**
+         * Set the descriptive text shown on the ShowcaseView as the title.
+         */
+        public Builder setSkipText(CharSequence text) {
+            showcaseView.setSkipText(text);
             return this;
         }
 
@@ -840,6 +862,20 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
         }
     }
 
+    public void animateIn() {
+        setVisibility(INVISIBLE);
+
+        mAnimationFactory.animateInView(this, mTarget.getPoint(), mFadeDurationInMillis,
+                new IAnimationFactory.AnimationStartListener() {
+                    @Override
+                    public void onAnimationStart() {
+                        setVisibility(View.VISIBLE);
+                        notifyOnDisplayed();
+                    }
+                }
+        );
+    }
+
 
     public void skip() {
 
@@ -849,7 +885,7 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
         mWasSkipped = true;
 
         if (mShouldAnimate) {
-            fadeOut();
+            animateOut();
         } else {
             removeFromWindow();
         }
