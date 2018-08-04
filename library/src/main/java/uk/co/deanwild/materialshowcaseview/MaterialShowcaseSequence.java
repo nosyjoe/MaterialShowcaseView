@@ -6,6 +6,8 @@ import android.view.View;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import uk.co.deanwild.materialshowcaseview.shape.Shape;
+
 
 public class MaterialShowcaseSequence implements IDetachedListener {
 
@@ -29,20 +31,36 @@ public class MaterialShowcaseSequence implements IDetachedListener {
         this.singleUse(sequenceID);
     }
 
+    public MaterialShowcaseSequence addSequenceItem(View targetView, String content, String dismissText, MaterialShowcaseView.ShapeType shapeType) {
+        addSequenceItem(targetView, "", content, dismissText, shapeType);
+        return this;
+    }
+
     public MaterialShowcaseSequence addSequenceItem(View targetView, String content, String dismissText) {
         addSequenceItem(targetView, "", content, dismissText);
         return this;
     }
 
     public MaterialShowcaseSequence addSequenceItem(View targetView, String title, String content, String dismissText) {
+        return addSequenceItem(targetView, title, content, dismissText, MaterialShowcaseView.ShapeType.NONE);
+    }
 
-        MaterialShowcaseView sequenceItem = new MaterialShowcaseView.Builder(mActivity)
+    public MaterialShowcaseSequence addSequenceItem(View targetView, String title, String content, String dismissText, MaterialShowcaseView.ShapeType shapeType) {
+
+        MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(mActivity)
                 .setTarget(targetView)
                 .setTitleText(title)
                 .setDismissText(dismissText)
                 .setContentText(content)
-                .setSequence(true)
-                .build();
+                .setSequence(true);
+
+        if (shapeType == MaterialShowcaseView.ShapeType.CIRCLE) {
+            builder.withCircleShape();
+        } else if (shapeType == MaterialShowcaseView.ShapeType.RECTANGLE) {
+            builder.withRectangleShape();
+        }
+
+        MaterialShowcaseView sequenceItem = builder.build();
 
         if (mConfig != null) {
             sequenceItem.setConfig(mConfig);

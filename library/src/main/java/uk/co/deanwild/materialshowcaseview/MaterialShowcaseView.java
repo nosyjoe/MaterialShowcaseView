@@ -497,7 +497,9 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
         setDismissStyle(config.getDismissTextStyle());
 
         setMaskColour(config.getMaskColor());
-        setShape(config.getShape());
+        if (mShape == null) {
+            setShape(config.getShape());
+        }
         setShapePadding(config.getShapePadding());
         setRenderOverNavigationBar(config.getRenderOverNavigationBar());
         setSkipText(config.getSkipText());
@@ -527,6 +529,10 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
         public void onGlobalLayout() {
             setTarget(mTarget);
         }
+    }
+
+    public enum ShapeType {
+        CIRCLE, RECTANGLE, NONE
     }
 
 
